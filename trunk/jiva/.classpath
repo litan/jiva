@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test/src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="C:/Users/lalitp/tools/logging-log4j-1.2.14/dist/lib/log4j-1.2.14.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry kind="lib" path="C:/Users/lalitp/tools/jmock2/lib/cglib-nodep-2.1_3.jar"/>
+	<classpathentry kind="lib" path="C:/Users/lalitp/tools/jmock2/lib/hamcrest-api-1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/lalitp/tools/jmock2/lib/hamcrest-library-1.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/lalitp/tools/jmock2/lib/jmock-2-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="C:/Users/lalitp/tools/jmock2/lib/jmock-junit4-2-SNAPSHOT.jar"/>
+	<classpathentry kind="output" path="ecbuild"/>
+</classpath>
