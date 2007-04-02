@@ -24,6 +24,7 @@ import net.xofar.jiva.operators.TestMutationOp;
 import net.xofar.jiva.selection.TestRouletteWheelSelector;
 import net.xofar.jiva.selection.TestTournamentSelector;
 import net.xofar.util.collection.immutable.TestList;
+import net.xofar.util.listener.TestBroadcaster;
 
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
@@ -33,6 +34,6 @@ import org.junit.runners.Suite.SuiteClasses;
 @SuiteClasses({TestRouletteWheelSelector.class, TestTournamentSelector.class,
         TestCrossoverOp.class, TestMutationOp.class, TestGeneFactory.class,
         TestValueAsBinaryList.class, TestSchema.class, TestNumberDecoder.class,
-        TestList.class})
+        TestList.class, TestBroadcaster.class})
 public class AllTests
 {}
