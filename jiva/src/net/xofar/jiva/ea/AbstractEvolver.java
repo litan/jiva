@@ -12,55 +12,41 @@
  * rights and limitations under the License.
  *
  */
+
 package net.xofar.jiva.ea;
 
 import net.xofar.jiva.GAProblem;
 import net.xofar.jiva.population.Chromosome;
 import net.xofar.jiva.population.Population;
-import net.xofar.jiva.samples.dejong.GeneticEventListener;
 import net.xofar.util.listener.EventBroadcaster;
 import net.xofar.util.listener.EventListener;
-import net.xofar.util.listener.Filter;
 import net.xofar.util.listener.NonBlockingBroadcaster;
 
 import org.apache.log4j.Logger;
 
-public abstract class AbstractEvolver<T> implements Evolver<T>
+public abstract class AbstractEvolver<T>
+        implements Evolver<T>
 {
     private static Logger log = Logger.getLogger(AbstractEvolver.class);
-    EventBroadcaster broadcaster = new NonBlockingBroadcaster();
-
-    public void addListener(EventListener listener)
-    {
-        broadcaster.addListener(listener);
-    }
-
-    public void addListener(EventListener listener, Filter filter)
-    {
-        broadcaster.addListener(listener, filter);
-    }
-
-    public void broadcastEvent(Object event)
-    {
-        broadcaster.broadcastEvent(event);
-    }
-
-    public void removeListener(EventListener listener)
-    {
-        broadcaster.removeListener(listener);
-    }
-
-    public void removeListener(EventListener listener, Filter filter)
-    {
-        broadcaster.removeListener(listener, filter);
-    }
+    EventBroadcaster<Population<T>> broadcaster = new NonBlockingBroadcaster<Population<T>>();
 
     public Population<T> run(GAProblem<T> problem)
     {
+        return run(problem, new EventListener<Population<T>>()
+        {
+            public void eventFired(Population<T> event)
+            {
+            // ignore
+            }
+        });
+    }
+
+    public Population<T> run(GAProblem<T> problem,
+            EventListener<Population<T>> listener)
+    {
         int numEvolutions = problem.getNumEvolutions();
         Evolver<T> evolver = this;
-//        GeneticEventListener eventListener = new GeneticEventListener();
-//        evolver.addListener(eventListener);
+        broadcaster.addListener(listener);
         Population<T> pop = getInitialPopulation(problem);
 
         double bestSoFar = -1.0;
@@ -74,7 +60,9 @@ public abstract class AbstractEvolver<T> implements Evolver<T>
             if (log.isDebugEnabled()) {
                 Chromosome<T> fittest = pop.determineFittestChromosome();
                 best = fittest.getFitnessValue();
-                log.debug(i + " - Fittest Chromosome has value (before evolution)" + best);
+                log.debug(i
+                        + " - Fittest Chromosome has value (before evolution)"
+                        + best);
             }
             evolver.evolve(pop);
             Chromosome<T> fittest = pop.getFittest();
@@ -83,7 +71,8 @@ public abstract class AbstractEvolver<T> implements Evolver<T>
                 log.info(i + " - Fittest Chromosome has value: " + best);
             }
             if (log.isInfoEnabled()) {
-                log.info(i + " - Avg Population Fitness: " + pop.getAvgFitness());
+                log.info(i + " - Avg Population Fitness: "
+                        + pop.getAvgFitness());
             }
             if (best > bestSoFar) {
                 bestSoFar = best;
@@ -91,13 +80,13 @@ public abstract class AbstractEvolver<T> implements Evolver<T>
         }
         return pop;
     }
-    
+
     private Population<T> getInitialPopulation(GAProblem<T> problem)
     {
         int populationSize = problem.getPopulationSize();
         Population<T> pop = new Population<T>();
         Chromosome<T> proto = problem.getPrototypeChromosome();
-        
+
         for (int i = 0; i < populationSize; i++) {
             Chromosome<T> chr = proto.getClone();
             chr.randomize(problem.getRandomGenerator());
