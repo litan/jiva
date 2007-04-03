@@ -12,11 +12,12 @@
  * rights and limitations under the License.
  *
  */
+
 package net.xofar.jiva.ea;
 
 import net.xofar.jiva.GAProblem;
 import net.xofar.jiva.population.Population;
-import net.xofar.util.listener.EventBroadcaster;
+import net.xofar.util.listener.EventListener;
 
 /**
  * 
@@ -24,9 +25,14 @@ import net.xofar.util.listener.EventBroadcaster;
  * 
  * Evolves populations
  */
-public interface Evolver<T> extends EventBroadcaster
+public interface Evolver<T>
 {
     public void evolve(Population<T> pop);
+
     public void init(Population<T> pop);
+
     public Population<T> run(GAProblem<T> problem);
+
+    public Population<T> run(GAProblem<T> problem,
+            EventListener<Population<T>> listener);
 }

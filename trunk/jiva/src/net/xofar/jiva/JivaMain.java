@@ -20,7 +20,7 @@ import net.xofar.jiva.population.Population;
 import net.xofar.jiva.samples.Knapsack;
 import net.xofar.jiva.samples.SpearsScape;
 
-public class JeevaMain
+public class JivaMain
 {
 
     public static void main(String[] args)
