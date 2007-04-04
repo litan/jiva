@@ -12,8 +12,8 @@
  * rights and limitations under the License.
  *
  */
-package net.xofar.jiva.selection;
 
+package net.xofar.jiva.selection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +22,11 @@ import net.xofar.jiva.RandomGenerator;
 import net.xofar.jiva.population.Chromosome;
 import net.xofar.jiva.population.Population;
 
-
 /**
  * @author Lpant
  * 
- * Selects 'howManyToSelect' elements from a supplied population based on
- * the roulette wheel algorithm
+ * Selects 'howManyToSelect' elements from a supplied population based on the
+ * roulette wheel algorithm
  */
 public class RouletteWheelSelector<T>
         extends AbstractSelector<T>
@@ -36,7 +35,7 @@ public class RouletteWheelSelector<T>
     {
         super(howManyToSelect, rg);
     }
-    
+
     public Population<T> select(Population<T> fromPopulation)
     {
         Population<T> toPopulation = new Population<T>();
@@ -45,27 +44,39 @@ public class RouletteWheelSelector<T>
         List<Double> probVals = new ArrayList<Double>();
         List<Double> cumProbs = new ArrayList<Double>();
         double fitnessSum = 0.0;
-        
+
         for (Chromosome<T> chr : chrs) {
             double fitness = chr.getFitnessValue();
             probVals.add(fitness);
             fitnessSum += fitness;
         }
-        
-        for (int i = 0; i < popSize; i++) {
-            double prob = probVals.get(i) / fitnessSum;
-            probVals.set(i, prob);
+
+        if (fitnessSum == 0) {
+            // takes into account the unlikely event that all 
+            // chromosomes in the given population have a fitness of zero
+            // generally this could happen for small chromsomes and small
+            // population sizes
+            for (int i = 0; i < howManyToSelect; i++) {
+                toPopulation.addChromosome(chrs.get(i).getClone());
+            }
         }
-        
-        cumProbs.add(probVals.get(0));
-        for (int i = 1; i < popSize; i++) {
-            cumProbs.add(probVals.get(i) + cumProbs.get(i-1));
+        else {
+            for (int i = 0; i < popSize; i++) {
+                double prob = probVals.get(i) / fitnessSum;
+                probVals.set(i, prob);
+            }
+
+            cumProbs.add(probVals.get(0));
+            for (int i = 1; i < popSize; i++) {
+                cumProbs.add(probVals.get(i) + cumProbs.get(i - 1));
+            }
+
+            for (int i = 0; i < howManyToSelect; i++) {
+                int selected = spinWheel(cumProbs);
+                toPopulation.addChromosome(chrs.get(selected).getClone());
+            }
         }
-        
-        for (int i = 0; i < howManyToSelect; i++) {
-            int selected = spinWheel(cumProbs);
-            toPopulation.addChromosome(chrs.get(selected).getClone());
-        }
+
         return toPopulation;
     }
 
@@ -73,12 +84,16 @@ public class RouletteWheelSelector<T>
     {
         double spinResult = rgen.nextDouble();
         int size = cumProbs.size();
-        
+
         for (int i = 0; i < size; i++) {
             if (spinResult < cumProbs.get(i)) {
                 return i;
             }
         }
-        throw new IllegalStateException("Spinwheel problem");
+        String msg = String
+                .format(
+                        "Spinwheel problem. Cumulative Probabilities: %s; spinResult: %f",
+                        cumProbs, spinResult);
+        throw new IllegalStateException(msg);
     }
 }

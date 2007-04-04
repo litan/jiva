@@ -33,11 +33,26 @@ public class SpearsScape
         setFitnessFunction(new SpearsFitnessFunction(100, 0.5, "linear",
                 getPrototypeChromosome(),
                 randomGenerator));
+        
+        setDescription("This is a Non-linear Numerical Optimization problem based " +
+        		"on an N-dimensional landscape defined by the Spears Function.\n");        
 
         double pm = 0.01;
         double pc = 0.9;
 
         setEvolver(EvolverFactory.agpaEvolver(getFitnessFunction(),
                 randomGenerator, pm, pc, getPopulationSize()));
+    }
+
+    @Override
+    public Double getOptimalSolution()
+    {
+        return 1.0;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Spears Landscape";
     }
 }

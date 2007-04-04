@@ -28,7 +28,7 @@ public abstract class AbstractEvolver<T>
         implements Evolver<T>
 {
     private static Logger log = Logger.getLogger(AbstractEvolver.class);
-    EventBroadcaster<Population<T>> broadcaster = new NonBlockingBroadcaster<Population<T>>();
+    EventBroadcaster<Population<T>> broadcaster;
 
     public Population<T> run(GAProblem<T> problem)
     {
@@ -46,6 +46,7 @@ public abstract class AbstractEvolver<T>
     {
         int numEvolutions = problem.getNumEvolutions();
         Evolver<T> evolver = this;
+        broadcaster = new NonBlockingBroadcaster<Population<T>>();        
         broadcaster.addListener(listener);
         Population<T> pop = getInitialPopulation(problem);
 
