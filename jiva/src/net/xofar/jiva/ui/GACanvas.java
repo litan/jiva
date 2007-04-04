@@ -18,11 +18,13 @@ package net.xofar.jiva.ui;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
+import java.awt.font.TextLayout;
 import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,10 +36,13 @@ public class GACanvas
 {
     private static final Color BACKGROUND = new Color(255, 255, 235);
     private static final Color FOREGROUND = new Color(128, 0, 0);
+    private static final int OFFSET = 65;
     List<Double> fitnesses = new ArrayList<Double>();
     private Image offScreenBuffer;
-    private int xScaleFactor = 1;
-    private Double yScaleFactor = 1.0;
+    private int numGens = 0;
+    private Double optima = 0.0;
+    private double xScale;
+    private double yScale;
 
     public GACanvas()
     {
@@ -47,8 +52,14 @@ public class GACanvas
     public void init(int xfactor, Double yfactor)
     {
         this.fitnesses = new ArrayList<Double>();
-        this.xScaleFactor = xfactor;
-        this.yScaleFactor = yfactor;
+        this.numGens = xfactor;
+        this.optima = yfactor;
+    }
+
+    public void clear()
+    {
+        init(0, 0.0);
+        repaint();
     }
 
     public void addFitnessValue(Double fitness)
@@ -68,32 +79,103 @@ public class GACanvas
 
         g2.setBackground(BACKGROUND);
         g2.clearRect(0, 0, d.width, d.height);
-        super.paintBorder(g);
-        g2.translate(0, d.height);
+
+        xScale = (d.width - 2 * OFFSET) * 0.8 / numGens;
+        yScale = (d.height - 2 * OFFSET) * 0.8 / optima;
+
+        g2.translate(OFFSET, d.height - OFFSET);
+        drawAxesLabels(g2, d);
+
         g2.scale(1, -1);
 
+        drawAxes(g2, d);
         drawOptimalFitness(g2, d);
         drawFitnesses(g2, d);
     }
 
-    private void drawOptimalFitness(Graphics2D g2, Dimension d)
+    private void drawAxesLabels(Graphics2D g2, Dimension d)
     {
-        Stroke stroke = new BasicStroke(1, BasicStroke.CAP_BUTT,
+        int xAxisLength = d.width - 2 * OFFSET;
+        int yAxisLength = d.height - 2 * OFFSET;
+        g2.drawString("Generation Number", xAxisLength / 3, 35);
+        g2.drawString("Best", -OFFSET + 5, -yAxisLength / 2);
+        g2.drawString("Solution", -OFFSET + 5, -yAxisLength / 2 + 15);
+
+        if (numGens != 0) {
+            Font f = g2.getFont();
+            TextLayout tl = new TextLayout(Integer.toString(numGens), f, g2
+                    .getFontRenderContext());
+            tl.draw(g2, (float)(xScale * numGens - 5), 20.0f);
+            tl = new TextLayout(Double.toString(optima), f, g2
+                    .getFontRenderContext());
+            tl.draw(g2, -30.0f, -(float)(yScale * optima - 5));
+        }
+    }
+
+    private void drawAxes(Graphics2D g2, Dimension d)
+    {
+        int tickSize = 4;
+
+        Path2D.Double axes = new Path2D.Double(Path2D.WIND_EVEN_ODD);
+
+        // x-axis.
+        int xAxisLength = d.width - 2 * OFFSET;
+        axes.moveTo(-OFFSET, 0);
+        axes.lineTo(xAxisLength, 0);
+
+        // y-axis.
+        int yAxisLength = d.height - 2 * OFFSET;
+        axes.moveTo(0, -OFFSET);
+        axes.lineTo(0, yAxisLength);
+
+        Stroke stroke = new BasicStroke(2, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_ROUND);
         g2.setStroke(stroke);
         g2.setPaint(Color.DARK_GRAY);
+        g2.draw(axes);
+
+        Path2D.Double axesTicks = new Path2D.Double(Path2D.WIND_EVEN_ODD);
+        float cm = 72 / 2.54f;
+
+        // x-axis tick marks
+        float lengthCentimeter = xAxisLength / cm;
+        for (float i = 1.0f; i < lengthCentimeter; i += 1.0f) {
+            float tick = i * cm;
+            axesTicks.moveTo(tick, -tickSize);
+            axesTicks.lineTo(tick, tickSize);
+        }
+
+        // y-axis tick marks
+        lengthCentimeter = yAxisLength / cm;
+        for (float i = 1.0f; i < lengthCentimeter; i += 1.0f) {
+            float tick = i * cm;
+            axesTicks.moveTo(-tickSize, tick);
+            axesTicks.lineTo(tickSize, tick);
+        }
+
+        stroke = new BasicStroke(1, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_ROUND);
+        g2.setStroke(stroke);
+        g2.setPaint(Color.GRAY);
+        g2.draw(axesTicks);
+    }
+
+    private void drawOptimalFitness(Graphics2D g2, Dimension d)
+    {
+        Stroke stroke = new BasicStroke(2, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_ROUND);
+        g2.setStroke(stroke);
+        g2.setPaint(Color.LIGHT_GRAY);
 
         Path2D.Double p = new Path2D.Double(Path2D.WIND_EVEN_ODD);
-        int x = 1;
-        double xScale = d.width * 0.9 / xScaleFactor;
-        double optima = d.height * 0.8;
 
-        p.moveTo(0, optima);
+        int x = 1;
+        p.moveTo(0, yScale * optima);
         for (Double fitness : fitnesses) {
-            p.lineTo(xScale * x, optima);
-            p.moveTo(xScale * x++, optima);
+            p.lineTo(xScale * x, yScale * optima);
+            p.moveTo(xScale * x++, yScale * optima);
         }
-        
+
         g2.draw(p);
     }
 
@@ -105,10 +187,8 @@ public class GACanvas
         g2.setPaint(FOREGROUND);
 
         Path2D.Double p = new Path2D.Double(Path2D.WIND_EVEN_ODD);
-        int x = 1;
-        double xScale = d.width * 0.9 / xScaleFactor;
-        double yScale = d.height * 0.8 / yScaleFactor;
 
+        int x = 1;
         p.moveTo(0, 0);
         for (Double fitness : fitnesses) {
             p.lineTo(xScale * x, yScale * fitness);
