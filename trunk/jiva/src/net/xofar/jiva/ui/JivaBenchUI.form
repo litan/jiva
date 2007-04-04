@@ -245,8 +245,6 @@
                 <TitledBorder title="GA Solution Trace"/>
               </Border>
             </Property>
-            <Property name="horizontalScrollBarPolicy" type="int" value="31"/>
-            <Property name="verticalScrollBarPolicy" type="int" value="21"/>
           </Properties>
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JSplitPaneSupportLayout$JSplitPaneConstraintsDescription">

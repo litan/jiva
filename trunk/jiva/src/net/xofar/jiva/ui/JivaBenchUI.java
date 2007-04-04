@@ -172,8 +172,6 @@ public class JivaBenchUI
         jSplitPane1.setLeftComponent(jPanel1);
 
         gaCanvasHolder.setBorder(javax.swing.BorderFactory.createTitledBorder("GA Solution Trace"));
-        gaCanvasHolder.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        gaCanvasHolder.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
         javax.swing.GroupLayout gaCanvasLayout = new javax.swing.GroupLayout(gaCanvas);
         gaCanvas.setLayout(gaCanvasLayout);
         gaCanvasLayout.setHorizontalGroup(
@@ -216,6 +214,7 @@ public class JivaBenchUI
         optimalSol.setText(String.valueOf(problem.getOptimalSolution()));
         desc.setText(problem.getDescription());
         desc.setCaretPosition(0);
+        ((GACanvas)gaCanvas).clear();
     }// GEN-LAST:event_problemsComboActionPerformed
 
     private void runButtonActionPerformed(java.awt.event.ActionEvent evt)
