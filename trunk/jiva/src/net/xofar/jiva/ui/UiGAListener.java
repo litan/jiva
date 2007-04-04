@@ -31,9 +31,8 @@ public class UiGAListener<T>
     public void eventFired(Population<T> pop)
     {
         double fitness = pop.getFittest().getFitnessValue(); 
-        System.out.println("****** Fittest Value: "
-                + fitness);
+//        System.out.println("****** Fittest Value: "
+//                + fitness);
         canvas.addFitnessValue(fitness);
-        canvas.repaint();
     }
 }
