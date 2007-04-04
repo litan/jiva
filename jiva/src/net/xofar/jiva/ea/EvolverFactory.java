@@ -28,6 +28,7 @@ import net.xofar.jiva.population.Chromosome;
 import net.xofar.jiva.population.ChromosomeWithLifetime;
 import net.xofar.jiva.population.Gene;
 import net.xofar.jiva.replacement.ApgaReplacer;
+import net.xofar.jiva.replacement.ElitistReplacer;
 import net.xofar.jiva.replacement.GenerationalReplacer;
 import net.xofar.jiva.replacement.Replacer;
 import net.xofar.jiva.selection.ParentSelector;
@@ -55,12 +56,12 @@ public class EvolverFactory
 
     public static Evolver<Boolean> standardEvolver(
             FitnessFunction<Boolean> fitnessFunction, RandomGenerator rg,
-            double pm, double pc)
+            double pm, double pc, int popSize)
     {
-        ParentSelector<Boolean> sel = new RouletteWheelSelector<Boolean>(100,
-                rg);
+        ParentSelector<Boolean> sel = new RouletteWheelSelector<Boolean>(
+                popSize, rg);
         Replacer<Boolean> replacer = new GenerationalReplacer<Boolean>();
-        // replacer = new ElitistReplacer();
+//        Replacer<Boolean> replacer = new ElitistReplacer<Boolean>();
         Evaluator<Boolean> evaluator = new FitnessEvaluatorImpl<Boolean>(
                 fitnessFunction);
         VariationOperator<Boolean> mutOp = new MutationOp(pm, rg);

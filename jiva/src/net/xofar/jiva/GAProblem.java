@@ -15,11 +15,16 @@
 
 package net.xofar.jiva;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.xofar.jiva.ea.Evolver;
 import net.xofar.jiva.fitness.FitnessFunction;
 import net.xofar.jiva.population.Chromosome;
+import net.xofar.jiva.samples.Knapsack;
+import net.xofar.jiva.samples.SpearsScape;
 
-public class GAProblem<T>
+public abstract class GAProblem<T>
 {
     protected int populationSize;
     protected FitnessFunction<T> fitnessFunction;
@@ -28,6 +33,7 @@ public class GAProblem<T>
     protected Evolver<T> evolver;
     protected Chromosome<T> prototypeChromosome;
     protected RandomGenerator randomGenerator;
+    String description;
 
     public GAProblem()
     {
@@ -103,4 +109,27 @@ public class GAProblem<T>
     {
         this.randomGenerator = randomGenerator;
     }
+    
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
+
+    public static GAProblem<?>[] getProblems()
+    {
+        List<GAProblem<?>> problems = new ArrayList<GAProblem<?>>();
+        problems.add(new Knapsack());
+        problems.add(new SpearsScape());
+        return problems.toArray(new GAProblem<?>[]{});
+    }
+
+    public abstract Double getOptimalSolution();
+    
+    @Override
+    public abstract String toString();
 }

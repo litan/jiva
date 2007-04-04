@@ -28,7 +28,7 @@ public class Knapsack
 {
     List<Double> itemValues, itemCosts;
     Double maxCost;
-    private boolean apga = false;
+    private boolean apga = true;
 
     public Knapsack()
     {
@@ -46,8 +46,18 @@ public class Knapsack
         itemCosts = Arrays.asList(3.0, 3.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 7.0,
                 7.0, 8.0, 8.0, 9.0);
 
-        setPopulationSize(50);
-        setNumEvolutions(200);
+        setDescription("This is a Combinitorial Optimization problem.\n\nThe general idea"
+                + " is that we want to pack a Knapsack with a given set of items. Each item"
+                + " has a cost (its volume) and a value assigned to it. The Knapsack has a "
+                + " given (max) volume. \n\nThe problem is - to pack the Knapsack in such a way that"
+                + " the value of items in the Knapsack is maximized - given the cost (volume)"
+                + " constraint on the Knapsack. \n\nThe Parameters for the current problem are:\n"
+                + "Max Cost: 17\n"
+                + "Item Costs: 3.0, 3.0, 3.0, 3.0, 3.0, 4.0, 4.0, 4.0, 7.0, 7.0, 8.0, 8.0, 9.0\n"
+                + "Item Values: 4.0, 4.0, 4.0, 4.0, 4.0, 5.0, 5.0, 5.0, 10.0, 10.0, 11.0, 11.0, 13.0");
+        
+        setPopulationSize(40);
+        setNumEvolutions(50);
         setChromosomeSize(itemCosts.size());
         setFitnessFunction(new Fitness());
         double pm = 0.1; // 1.0 / getPopulationSize();
@@ -65,7 +75,7 @@ public class Knapsack
                     getChromosomeSize(), randomGenerator));
 
             setEvolver(EvolverFactory.standardEvolver(getFitnessFunction(),
-                    randomGenerator, pm, pc));
+                    randomGenerator, pm, pc, getPopulationSize()));
         }
     }
 
@@ -88,5 +98,17 @@ public class Knapsack
             }
             return value;
         }
+    }
+
+    @Override
+    public Double getOptimalSolution()
+    {
+        return 24.0;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Knapsack Packing";
     }
 }

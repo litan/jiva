@@ -16,7 +16,6 @@
 package net.xofar.jiva.ui;
 
 import java.awt.BasicStroke;
-import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -28,23 +27,35 @@ import java.awt.geom.Path2D;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.JPanel;
+
 public class GACanvas
-        extends Canvas
+        extends JPanel
 {
-    private static final Color BACKGROUND = new Color(255, 255, 187);
+    private static final Color BACKGROUND = new Color(255, 255, 235);
     private static final Color FOREGROUND = new Color(128, 0, 0);
     List<Double> fitnesses = new ArrayList<Double>();
     private Image offScreenBuffer;
+    private int xScaleFactor = 1;
+    private Double yScaleFactor = 1.0;
 
     public GACanvas()
     {
     // createBufferStrategy(2);
     }
 
-    public void addFitnessValue(double fitness)
+    public void init(int xfactor, Double yfactor)
+    {
+        this.fitnesses = new ArrayList<Double>();
+        this.xScaleFactor = xfactor;
+        this.yScaleFactor = yfactor;
+    }
+
+    public void addFitnessValue(Double fitness)
     {
         fitnesses.add(fitness);
-        render();
+        bufferedPaint();
+        // paint(getGraphics());
     }
 
     @Override
@@ -57,7 +68,37 @@ public class GACanvas
 
         g2.setBackground(BACKGROUND);
         g2.clearRect(0, 0, d.width, d.height);
+        super.paintBorder(g);
+        g2.translate(0, d.height);
+        g2.scale(1, -1);
 
+        drawOptimalFitness(g2, d);
+        drawFitnesses(g2, d);
+    }
+
+    private void drawOptimalFitness(Graphics2D g2, Dimension d)
+    {
+        Stroke stroke = new BasicStroke(1, BasicStroke.CAP_BUTT,
+                BasicStroke.JOIN_ROUND);
+        g2.setStroke(stroke);
+        g2.setPaint(Color.DARK_GRAY);
+
+        Path2D.Double p = new Path2D.Double(Path2D.WIND_EVEN_ODD);
+        int x = 1;
+        double xScale = d.width * 0.9 / xScaleFactor;
+        double optima = d.height * 0.8;
+
+        p.moveTo(0, optima);
+        for (Double fitness : fitnesses) {
+            p.lineTo(xScale * x, optima);
+            p.moveTo(xScale * x++, optima);
+        }
+        
+        g2.draw(p);
+    }
+
+    private void drawFitnesses(Graphics2D g2, Dimension d)
+    {
         Stroke stroke = new BasicStroke(3, BasicStroke.CAP_BUTT,
                 BasicStroke.JOIN_ROUND);
         g2.setStroke(stroke);
@@ -65,22 +106,18 @@ public class GACanvas
 
         Path2D.Double p = new Path2D.Double(Path2D.WIND_EVEN_ODD);
         int x = 1;
-        double xScale = 2;
-        double yScale = d.height * 0.8;
+        double xScale = d.width * 0.9 / xScaleFactor;
+        double yScale = d.height * 0.8 / yScaleFactor;
+
+        p.moveTo(0, 0);
         for (Double fitness : fitnesses) {
-            if (x == 1) {
-                p.moveTo(xScale * x++, yScale * fitness);
-            }
-            else {
-                p.lineTo(xScale * x++, yScale * fitness);
-            }
+            p.lineTo(xScale * x, yScale * fitness);
+            p.moveTo(xScale * x++, yScale * fitness);
         }
-        g2.translate(0, d.height);
-        g2.scale(1, -1);
         g2.draw(p);
     }
 
-    protected void render()
+    protected void bufferedPaint()
     {
         Graphics g = getGraphics();
         if (g != null) {
