@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005 Lalit Pant <pant.lalit@gmail.com>
+ * Copyright (C) 2007 Lalit Pant <pant.lalit@gmail.com>
  *
  * The contents of this file are subject to the GNU General Public License 
  * Version 2 or later (the "License"); you may not use this file
@@ -11,10 +11,6 @@
  * implied. See the License for the specific language governing
  * rights and limitations under the License.
  *
- */
-
-/*
- * Created on Apr 11, 2005
  */
 package net.xofar.jiva.population;
 

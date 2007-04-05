@@ -12,11 +12,6 @@
  * rights and limitations under the License.
  *
  */
-
-/*
- * Created on Jan 22, 2005
- */
-
 package net.xofar.jiva.population;
 
 import java.util.List;
