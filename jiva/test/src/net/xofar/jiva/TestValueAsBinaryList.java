@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005 Lalit Pant <pant.lalit@gmail.com>
+ * Copyright (C) 2007 Lalit Pant <pant.lalit@gmail.com>
  *
  * The contents of this file are subject to the GNU General Public License 
  * Version 2 or later (the "License"); you may not use this file
@@ -12,11 +12,6 @@
  * rights and limitations under the License.
  *
  */
-
-/*
- * Created on Feb 2, 2005
- */
-
 package net.xofar.jiva;
 
 import junit.framework.TestCase;

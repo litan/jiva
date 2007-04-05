@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2005 Lalit Pant <pant.lalit@gmail.com>
+ * Copyright (C) 2007 Lalit Pant <pant.lalit@gmail.com>
  *
  * The contents of this file are subject to the GNU General Public License 
  * Version 2 or later (the "License"); you may not use this file
@@ -12,11 +12,6 @@
  * rights and limitations under the License.
  *
  */
-
-/*
- * Created on Apr 1, 2005
- */
-
 package net.xofar.jiva.problem;
 
 import junit.framework.TestCase;
@@ -27,11 +22,12 @@ import net.xofar.jiva.population.BooleanGene;
 import net.xofar.jiva.population.Chromosome;
 import net.xofar.jiva.population.Gene;
 
+// does not test anything for real - for now
 public class TestSpearsProblemGenerator
         extends TestCase
 {
     SpearsFitnessFunction func;
-    Chromosome proto;
+    Chromosome<Boolean> proto;
     private RandomGenerator rg;
 
     @Override
@@ -39,13 +35,13 @@ public class TestSpearsProblemGenerator
             throws Exception
     {
         rg = new StockRandomGenerator();
-        proto = new Chromosome();
+        proto = new Chromosome<Boolean>();
     }
 
     public void test1()
     {
         for (int j = 0; j < 10; j++) {
-            Gene gene = new BooleanGene();
+            Gene<Boolean> gene = new BooleanGene();
             proto.addGene(gene);
         }
         proto.randomize(rg);
