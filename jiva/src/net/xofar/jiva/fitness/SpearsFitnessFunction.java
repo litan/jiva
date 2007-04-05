@@ -12,11 +12,6 @@
  * rights and limitations under the License.
  *
  */
-
-/*
- * Created on Mar 31, 2005
- */
-
 package net.xofar.jiva.fitness;
 
 import net.xofar.jiva.RandomGenerator;

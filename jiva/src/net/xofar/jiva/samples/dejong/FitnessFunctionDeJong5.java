@@ -7,16 +7,14 @@ import net.xofar.jiva.fitness.FitnessFunction;
 import net.xofar.jiva.population.BinaryDecoder;
 import net.xofar.jiva.population.Chromosome;
 import net.xofar.jiva.population.ChromosomeDecoder;
-import net.xofar.jiva.population.DoubleDecoder;
-import net.xofar.jiva.population.Locus;
 import net.xofar.jiva.population.Position;
 import net.xofar.jiva.population.Range;
 
-public class FitnessFunctionDeJong5<T>
-implements FitnessFunction<T>
+public class FitnessFunctionDeJong5
+implements FitnessFunction<Boolean>
 {
-    ChromosomeDecoder xDecoder;
-    ChromosomeDecoder yDecoder;
+    ChromosomeDecoder<Boolean> xDecoder;
+    ChromosomeDecoder<Boolean> yDecoder;
     Position xPos, yPos;
     
     double f5a[][] = {
@@ -25,35 +23,35 @@ implements FitnessFunction<T>
       };
     
     
-    public FitnessFunctionDeJong5(boolean binary)
+    public FitnessFunctionDeJong5()
     {
-        if (binary) {
+        if (true) {
             xDecoder = new BinaryDecoder(-65.536, 65.536, 17);
             xPos = new Range(0, 17);
             yDecoder = new BinaryDecoder(-65.536, 65.536, 17);
             yPos = new Range(17, 34);
         }
-        else {
-            xDecoder = new DoubleDecoder();
-            xPos = new Locus(0);
-            yDecoder = xDecoder;
-            yPos = new Locus(1);
-        }
+//        else {
+//            xDecoder = new DoubleDecoder();
+//            xPos = new Locus(0);
+//            yDecoder = xDecoder;
+//            yPos = new Locus(1);
+//        }
     }
     
-    public double evaluate(Chromosome<T> chr)
+    public double evaluate(Chromosome<Boolean> chr)
     {
         double x = getXValue(chr);
         double y = getYValue(chr);
         return f5(x, y);
     }
 
-    double getXValue(Chromosome<T> chr)
+    double getXValue(Chromosome<Boolean> chr)
     {
         return xDecoder.decode(chr, xPos);
     }
 
-    double getYValue(Chromosome<T> chr)
+    double getYValue(Chromosome<Boolean> chr)
     {
         return yDecoder.decode(chr, yPos);
     }
