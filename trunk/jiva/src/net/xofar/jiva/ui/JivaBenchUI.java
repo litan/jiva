@@ -59,7 +59,7 @@ public class JivaBenchUI
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Jiva Demo");
-        setBounds(new java.awt.Rectangle(75, 75, 900, 500));
+        setBounds(new java.awt.Rectangle(75, 75, 850, 600));
         setMinimumSize(new java.awt.Dimension(850, 600));
         jSplitPane1.setDividerLocation(325);
         jSplitPane1.setOneTouchExpandable(true);
@@ -201,7 +201,8 @@ public class JivaBenchUI
                 .add(jSplitPane1, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 475, Short.MAX_VALUE)
                 .addContainerGap())
         );
-        pack();
+        java.awt.Dimension screenSize = java.awt.Toolkit.getDefaultToolkit().getScreenSize();
+        setBounds((screenSize.width-850)/2, (screenSize.height-600)/2, 850, 600);
     }// </editor-fold>//GEN-END:initComponents
 
     private void problemsComboActionPerformed(java.awt.event.ActionEvent evt)
@@ -255,7 +256,7 @@ public class JivaBenchUI
     public static void main(String args[])
             throws Exception
     {
-        UIManager.setLookAndFeel(new WindowsLookAndFeel());
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         java.awt.EventQueue.invokeLater(new Runnable()
         {
             public void run()
