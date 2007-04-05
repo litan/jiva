@@ -171,10 +171,10 @@ public class GACanvas
         GeneralPath p = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
 
         int x = 1;
-        p.moveTo(0, yScale * optima);
+        p.moveTo(0, (float)(yScale * optima));
         for (Double fitness : fitnesses) {
-            p.lineTo(xScale * x, yScale * optima);
-            p.moveTo(xScale * x++, yScale * optima);
+            p.lineTo((float)(xScale * x), (float)(yScale * optima));
+            p.moveTo((float)(xScale * x++), (float)(yScale * optima));
         }
 
         g2.draw(p);
@@ -192,8 +192,8 @@ public class GACanvas
         int x = 1;
         p.moveTo(0, 0);
         for (Double fitness : fitnesses) {
-            p.lineTo(xScale * x, yScale * fitness);
-            p.moveTo(xScale * x++, yScale * fitness);
+            p.lineTo((float)(xScale * x), (float)(yScale * fitness));
+            p.moveTo((float)(xScale * x++), (float)(yScale * fitness));
         }
         g2.draw(p);
     }
