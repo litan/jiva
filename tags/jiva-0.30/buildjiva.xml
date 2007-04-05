@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project basedir="." default="build" name="Jiva">
+    <property environment="env"/>
+    <property name="junit.output.dir" value="junit"/>
+    <property name="debuglevel" value="source,lines,vars"/>
+    <property name="target" value="1.5"/>
+    <property name="source" value="1.5"/>
+    <path id="Jiva.classpath">
+	      <pathelement location="build"/>
+        <pathelement location="lib/thirdparty/swing-layout-1.0.jar"/>
+        <pathelement location="lib/thirdparty/log4j-1.2.14.jar"/>
+	      <pathelement location="lib/thirdparty/junit-4.1.jar"/>
+        <pathelement location="lib/thirdparty/cglib-nodep-2.1_3.jar"/>
+        <pathelement location="lib/thirdparty/hamcrest-api-1.0.jar"/>
+        <pathelement location="lib/thirdparty/hamcrest-library-1.0.jar"/>
+        <pathelement location="lib/thirdparty/jmock-2-SNAPSHOT.jar"/>
+        <pathelement location="lib/thirdparty/jmock-junit4-2-SNAPSHOT.jar"/>
+    </path>
+    <target name="init">
+        <mkdir dir="build"/>
+        <copy includeemptydirs="false" todir="build">
+            <fileset dir="src" excludes="**/*.uad, **/*.ucd, **/*.uld, **/*.upd, **/*.udd, **/*.uod, **/*.usd, **/*.utd, **/*.uud, **/*.odd, **/*.ead, **/*.ecd, **/*.eld, **/*.epd, **/*.edd, **/*.eod, **/*.esd, **/*.etd, **/*.eud, **/*.urd*.uml2, **/*.ecore, **/*.launch, **/*.java"/>
+        </copy>
+        <copy includeemptydirs="false" todir="build">
+            <fileset dir="test/src" excludes="**/*.uad, **/*.ucd, **/*.uld, **/*.upd, **/*.udd, **/*.uod, **/*.usd, **/*.utd, **/*.uud, **/*.odd, **/*.ead, **/*.ecd, **/*.eld, **/*.epd, **/*.edd, **/*.eod, **/*.esd, **/*.etd, **/*.eud, **/*.urd*.uml2, **/*.ecore, **/*.launch, **/*.java"/>
+        </copy>
+    </target>
+    <target name="clean">
+        <delete dir="build"/>
+    </target>
+    <target depends="clean" name="cleanall"/>
+    <target depends="init" name="build">
+        <echo message="${ant.project.name}: ${ant.file}"/>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="build" source="${source}" target="${target}">
+            <src path="src"/>
+            <classpath refid="Jiva.classpath"/>
+        </javac>
+        <javac debug="true" debuglevel="${debuglevel}" destdir="build" source="${source}" target="${target}">
+            <src path="test/src"/>
+            <classpath refid="Jiva.classpath"/>
+        </javac>
+    </target>
+    <target name="AllTests">
+        <mkdir dir="${junit.output.dir}"/>
+        <junit fork="yes" printsummary="withOutAndErr">
+            <formatter type="xml"/>
+            <test name="net.xofar.jiva.AllTests" todir="${junit.output.dir}"/>
+            <classpath refid="Jiva.classpath"/>
+        </junit>
+    </target>
+    <target depends="build" name="run">
+        <java classname="net.xofar.jiva.ui.JivaBenchUI" failonerror="true" fork="yes">
+            <classpath refid="Jiva.classpath"/>
+        </java>
+    </target>
+    <target name="junitreport">
+        <junitreport todir="${junit.output.dir}">
+            <fileset dir="${junit.output.dir}">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report format="frames" todir="${junit.output.dir}"/>
+        </junitreport>
+    </target>
+</project>
