@@ -6,8 +6,6 @@
 
 package net.xofar.jiva.ui;
 
-import java.awt.BorderLayout;
-
 import javax.swing.UIManager;
 
 import net.xofar.jiva.GAProblem;
@@ -62,6 +60,7 @@ public class JivaBenchUI
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Jiva Demo");
         setBounds(new java.awt.Rectangle(75, 75, 900, 500));
+        setMinimumSize(new java.awt.Dimension(850, 600));
         jSplitPane1.setDividerLocation(325);
         jSplitPane1.setOneTouchExpandable(true);
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("GA Problem Definition"));

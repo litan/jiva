@@ -36,7 +36,7 @@ public class GACanvas
 {
     private static final Color BACKGROUND = new Color(255, 255, 235);
     private static final Color FOREGROUND = new Color(128, 0, 0);
-    private static final int OFFSET = 65;
+    private static final int OFFSET = 70;
     List<Double> fitnesses = new ArrayList<Double>();
     private Image offScreenBuffer;
     private int numGens = 0;
@@ -84,6 +84,7 @@ public class GACanvas
         yScale = (d.height - 2 * OFFSET) * 0.8 / optima;
 
         g2.translate(OFFSET, d.height - OFFSET);
+        g2.setFont(Font.decode("Lucida Sans Demibold"));
         drawAxesLabels(g2, d);
 
         g2.scale(1, -1);
@@ -99,7 +100,7 @@ public class GACanvas
         int yAxisLength = d.height - 2 * OFFSET;
         g2.drawString("Generation Number", xAxisLength / 3, 35);
         g2.drawString("Best", -OFFSET + 5, -yAxisLength / 2);
-        g2.drawString("Solution", -OFFSET + 5, -yAxisLength / 2 + 15);
+        g2.drawString("Fitness", -OFFSET + 5, -yAxisLength / 2 + 15);
 
         if (numGens != 0) {
             Font f = g2.getFont();
