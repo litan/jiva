@@ -25,7 +25,7 @@ import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.Stroke;
 import java.awt.font.TextLayout;
-import java.awt.geom.Path2D;
+import java.awt.geom.GeneralPath;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -117,7 +117,7 @@ public class GACanvas
     {
         int tickSize = 4;
 
-        Path2D.Double axes = new Path2D.Double(Path2D.WIND_EVEN_ODD);
+        GeneralPath axes = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
 
         // x-axis.
         int xAxisLength = d.width - 2 * OFFSET;
@@ -135,7 +135,7 @@ public class GACanvas
         g2.setPaint(Color.DARK_GRAY);
         g2.draw(axes);
 
-        Path2D.Double axesTicks = new Path2D.Double(Path2D.WIND_EVEN_ODD);
+        GeneralPath axesTicks = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
         float cm = 72 / 2.54f;
 
         // x-axis tick marks
@@ -168,7 +168,7 @@ public class GACanvas
         g2.setStroke(stroke);
         g2.setPaint(Color.LIGHT_GRAY);
 
-        Path2D.Double p = new Path2D.Double(Path2D.WIND_EVEN_ODD);
+        GeneralPath p = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
 
         int x = 1;
         p.moveTo(0, yScale * optima);
@@ -187,7 +187,7 @@ public class GACanvas
         g2.setStroke(stroke);
         g2.setPaint(FOREGROUND);
 
-        Path2D.Double p = new Path2D.Double(Path2D.WIND_EVEN_ODD);
+        GeneralPath p = new GeneralPath(GeneralPath.WIND_EVEN_ODD);
 
         int x = 1;
         p.moveTo(0, 0);
