@@ -16,6 +16,9 @@
 package net.xofar.util.collection.immutable;
 
 import java.util.Iterator;
+import java.util.ListIterator;
+
+import net.xofar.util.collection.ListBuffer;
 
 public abstract class List<T>
         implements Iterable<T>
@@ -71,6 +74,116 @@ public abstract class List<T>
     {
         return new Nil<T>();
     }
+
+    public static <T> List<T> fromJclList(java.util.List<T> buffer)
+    {
+        List<T> ret = new Nil<T>();
+        for (ListIterator<T> iter = buffer.listIterator(buffer.size()); iter
+                .hasPrevious();) {
+            T elem = iter.previous();
+            ret = ret.prepend(elem);
+        }
+        return ret;
+    }
+
+    public boolean contains(T elem)
+    {
+        if (isEmpty()) {
+            return false;
+        }
+
+        if (head().equals(elem)) {
+            return true;
+        }
+        else {
+            return tail().contains(elem);
+        }
+    }
+
+    public int size()
+    {
+        if (isEmpty()) {
+            return 0;
+        }
+
+        return 1 + tail().size();
+    }
+
+    @Override
+    public String toString()
+    {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        sb.append(toStringInternal());
+        sb.append("]");
+        return sb.toString();
+    }
+
+    private String toStringInternal()
+    {
+        if (isEmpty()) {
+            return "";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append(head().toString());
+        if (!tail().isEmpty()) {
+            sb.append(",");
+        }
+        sb.append(tail().toStringInternal());
+        return sb.toString();
+    }
+
+    public List<T> drop(int n)
+    {
+        List<T> newList = this;
+        for (int i = 0; i < n; i++) {
+            newList = newList.tail();
+        }
+        return newList;
+    }
+
+    public List<T> take(int n)
+    {
+        ListBuffer<T> buf = new ListBuffer<T>();
+        List<T> newList = this;
+        for (int i = 0; i < n; i++) {
+            buf.add(newList.head());
+            newList = newList.tail();
+        }
+        return List.fromJclList(buf);
+    }
+
+    public List<T> slice(int from, int to)
+    {
+        return drop(from).take(to - from);
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj) {
+            return true;
+        }
+
+        if (!(obj instanceof List)) {
+            return false;
+        }
+
+        List<T> other = (List<T>)obj;
+
+        if (isEmpty()) {
+            if (other.isEmpty()) {
+                return true;
+            }
+            else {
+                return false;
+            }
+        }
+
+        return head().equals(other.head()) && tail().equals(other.tail());
+    }
+
 }
 
 
