@@ -15,7 +15,7 @@
 
 package net.xofar.util.collection.immutable;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -73,4 +73,34 @@ public class TestList
         }
         assertTrue(expected.equals(actual));
     }
+    
+    @Test
+    public void testContains()
+    {
+        list = List.fromJclList(Arrays.asList(1, 2, 3));
+        assertTrue(list.contains(2));
+        assertFalse(list.contains(4));
+    }
+    
+    @Test
+    public void testTake()
+    {
+        list = List.fromJclList(Arrays.asList(1, 2, 3));
+        assertEquals(List.fromJclList(Arrays.asList(1, 2)), list.take(2));
+    }
+    
+    @Test
+    public void testDrop()
+    {
+        list = List.fromJclList(Arrays.asList(1, 2, 3));
+        assertEquals(List.fromJclList(Arrays.asList(3)), list.drop(2));
+    }
+    
+    @Test
+    public void testSlice()
+    {
+        list = List.fromJclList(Arrays.asList(1, 2, 3, 4));
+        assertEquals(List.fromJclList(Arrays.asList(2, 3)), list.slice(1, 3));
+    }
+    
 }
