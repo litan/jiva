@@ -13,13 +13,19 @@
  *
  */
 
-package net.xofar.util.collection;
+package net.xofar.util.collection.immutable;
 
 import java.util.ArrayList;
 
-import net.xofar.util.collection.immutable.List;
-
-public class ListBuffer<T> extends ArrayList<T>
+/**
+ * A helper class for immutable Lists - for situations where you need to add
+ * elements to the end of a list within an algorithms. Immutable lists do not
+ * have an add operation; they only support prepending.
+ * 
+ * @author lalitp
+ */
+public class ListBuffer<T>
+        extends ArrayList<T>
 {
     public List<T> toList()
     {
