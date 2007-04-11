@@ -12,24 +12,27 @@
  * rights and limitations under the License.
  *
  */
+
 package net.xofar.jiva.fitness;
 
 import net.xofar.jiva.population.Chromosome;
 import net.xofar.jiva.population.ChromosomeWithLifetime;
 import net.xofar.jiva.population.Population;
 
-public class ApgaFitnessEvaluator<T> extends FitnessEvaluatorImpl<T>
+public class ApgaFitnessEvaluator<T>
+        extends FitnessEvaluatorImpl<T>
 {
     private static final int MIN_LT = 1;
     private static final int MAX_LT = 11;
-    private static double eta = (MAX_LT - MIN_LT) /2.0;
+    private static double eta = (MAX_LT - MIN_LT) / 2.0;
 
     public ApgaFitnessEvaluator(FitnessFunction<T> fitnessFunction)
     {
         super(fitnessFunction);
     }
-    
-    public void evaluate(Population<T> currentPopulation, Population<T> selectedPopulation)
+
+    public void evaluate(Population<T> currentPopulation,
+            Population<T> selectedPopulation)
     {
         // first determine aggregate stats
         double avgFit = -1.0, minFit = Double.MAX_VALUE, maxFit = -1.0;
@@ -70,14 +73,13 @@ public class ApgaFitnessEvaluator<T> extends FitnessEvaluatorImpl<T>
             if (avgFit >= agpaChr.getFitnessValue()) {
                 lt = (int)(MIN_LT + eta * (agpaChr.getFitnessValue() - minFit)
                         / (avgFit - minFit));
-                agpaChr.setLifetime(lt);
             }
             else {
                 lt = (int)(0.5 * (MIN_LT + MAX_LT) + eta
                         * (agpaChr.getFitnessValue() - avgFit)
                         / (maxFit - avgFit));
-                agpaChr.setLifetime(lt);
             }
+            agpaChr.setLifetime(lt);
         }
-    }    
+    }
 }
