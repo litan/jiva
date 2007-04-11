@@ -20,6 +20,11 @@ public class Pair<E1, E2>
     public E1 e1;
     public E2 e2;
 
+    public static <E1, E2> Pair<E1, E2> create(E1 e1, E2 e2)
+    {
+        return new Pair<E1, E2>(e1, e2);
+    }
+
     public Pair(E1 e1, E2 e2)
     {
         this.e1 = e1;
