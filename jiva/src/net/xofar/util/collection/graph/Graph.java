@@ -15,38 +15,65 @@
 
 package net.xofar.util.collection.graph;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Deque;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
+import java.util.Set;
 
 import net.xofar.util.collection.Pair;
-import net.xofar.util.collection.SmartMap;
 
 public class Graph<T>
 {
     Map<Vertex<T>, List<Vertex<T>>> adjList = new HashMap<Vertex<T>, List<Vertex<T>>>();
+    Set<Vertex<T>> vertices = new LinkedHashSet<Vertex<T>>();
+    private boolean directed;
 
     enum VertexColor {
         WHITE, GRAY, BLACK
     };
 
-    private void edge(Pair<Vertex<T>, Vertex<T>> edge)
+    public Graph(boolean directed)
     {
-        List<Vertex<T>> currList = adjList.get(edge.e1);
-        if (currList == null) {
-            currList = new ArrayList<Vertex<T>>();
-            adjList.put(edge.e1, currList);
-        }
-        currList.add(edge.e2);
+        this.directed = directed;
     }
 
-    private List<Vertex<T>> adjList(Vertex<T> vertex)
+    Set<Vertex<T>> getVertices()
+    {
+        return vertices;
+    }
+
+    private void edge(Pair<Vertex<T>, Vertex<T>> edge)
+    {
+        addEdgeToAdjList(edge.e1, edge.e2);
+
+        if (!directed) {
+            addEdgeToAdjList(edge.e2, edge.e1);
+        }
+
+        if (!vertices.contains(edge.e1)) {
+            vertices.add(edge.e1);
+        }
+        if (!vertices.contains(edge.e2)) {
+            vertices.add(edge.e2);
+        }
+    }
+
+    private void addEdgeToAdjList(Vertex<T> v1, Vertex<T> v2)
+    {
+        List<Vertex<T>> currList = adjList.get(v1);
+        if (currList == null) {
+            currList = new ArrayList<Vertex<T>>();
+            adjList.put(v1, currList);
+        }
+        currList.add(v2);
+    }
+
+    List<Vertex<T>> adjList(Vertex<T> vertex)
     {
         List<Vertex<T>> adjacents = adjList.get(vertex);
         if (adjacents == null) {
@@ -55,33 +82,6 @@ public class Graph<T>
         else {
             return adjacents;
         }
-    }
-
-    public SearchResults<T> bfs(Vertex<T> root, GraphVisitor<T> visitor)
-    {
-        Deque<Vertex<T>> open = new ArrayDeque<Vertex<T>>();
-        SearchResults<T> sr = new SearchResults<T>();
-
-        open.addLast(root);
-        while (!open.isEmpty()) {
-            Vertex<T> vertex = open.removeFirst();
-            visitor.visit(vertex);
-            sr.setBlack(vertex);
-
-            List<Vertex<T>> adjacents = adjList(vertex);
-            for (Vertex<T> adjVertex : adjacents) {
-                if (sr.isBlack(adjVertex)) {
-                    continue;
-                }
-                if (sr.isGray(adjVertex)) {
-                    continue;
-                }
-                sr.setGray(adjVertex);
-                sr.setParent(adjVertex, vertex);
-                open.addLast(adjVertex);
-            }
-        }
-        return sr;
     }
 
     @Override
@@ -120,16 +120,16 @@ public class Graph<T>
             edges.add(Pair.create(vertex1, vertex2));
         }
 
-        public Graph<T> build()
+        public Graph<T> build(boolean directed)
         {
-            Graph<T> graph = new Graph<T>();
+            Graph<T> graph = new Graph<T>(directed);
             for (Pair<Vertex<T>, Vertex<T>> edge : edges) {
                 graph.edge(edge);
             }
             return graph;
         }
 
-        public static Graph<String> build(String graphRep)
+        public static Graph<String> build(String graphRep, boolean directed)
         {
             Builder<String> builder = new Builder<String>();
             Scanner scanner = new Scanner(graphRep);
@@ -147,7 +147,7 @@ public class Graph<T>
                 Vertex<String> v2 = new Vertex<String>(vs2);
                 builder.edge(v1, v2);
             }
-            return builder.build();
+            return builder.build(directed);
         }
 
         private static String nextToken(Scanner scanner)
@@ -163,41 +163,15 @@ public class Graph<T>
         }
     }
 
-    static class SearchResults<T>
+    public Bfs.SearchResults<T> bfs(Vertex<T> vertex, GraphVisitor<T> visitor)
     {
-        Map<Vertex<T>, Vertex<T>> parents = new HashMap<Vertex<T>, Vertex<T>>();
-        Map<Vertex<T>, VertexColor> vState = new SmartMap<Vertex<T>, VertexColor>(
-                VertexColor.WHITE);
+        Bfs<T> searcher = new Bfs<T>();
+        return searcher.bfs(this, vertex, visitor);
+    }
 
-        public boolean isBlack(Vertex<T> vertex)
-        {
-            return vState.get(vertex).equals(VertexColor.BLACK);
-        }
-
-        public boolean isGray(Vertex<T> vertex)
-        {
-            return vState.get(vertex).equals(VertexColor.GRAY);
-        }
-
-        public void setGray(Vertex<T> vertex)
-        {
-            vState.put(vertex, VertexColor.GRAY);
-        }
-
-        public void setBlack(Vertex<T> vertex)
-        {
-            vState.put(vertex, VertexColor.BLACK);
-        }
-
-        public void setParent(Vertex<T> child, Vertex<T> parent)
-        {
-            parents.put(child, parent);
-        }
-
-        @Override
-        public String toString()
-        {
-            return parents.toString();
-        }
+    public Dfs<T>.SearchResults dfs(Vertex<T> vertex, GraphVisitor<T> visitor)
+    {
+        Dfs<T> searcher = new Dfs<T>();
+        return searcher.dfs(this, visitor);
     }
 }
