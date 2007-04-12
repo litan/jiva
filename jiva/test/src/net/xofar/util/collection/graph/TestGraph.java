@@ -20,8 +20,6 @@ import static net.xofar.jiva.TestUtils.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.xofar.util.collection.graph.Graph.SearchResults;
-
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
@@ -52,8 +50,26 @@ public class TestGraph
             }
 
         });
-        Graph<String> g = Graph.Builder.build("((A,B),(A,C),(A,D),(B,D))");
-        SearchResults<String> sr = g.bfs(new Vertex<String>("A"), visitor);
+        Graph<String> g = Graph.Builder.build("((A,B),(A,C),(A,D),(B,D))", false);
+        Bfs.SearchResults<String> sr = g.bfs(new Vertex<String>("A"), visitor);
+        System.out.println(sr.toString());
+    }
+
+    @Test
+    public void testDfs()
+    {
+        final GraphVisitor<String> visitor = context.mock(GraphVisitor.class);
+
+        context.checking(new Expectations()
+        {
+            {
+                exactly(4).of(visitor).visit(
+                        with(argSequence(vertexSequence("D", "B", "C", "A"))));
+            }
+
+        });
+        Graph<String> g = Graph.Builder.build("((A,B),(A,C),(A,D),(B,D))", false);
+        Dfs<String>.SearchResults sr = g.dfs(new Vertex<String>("A"), visitor);
         System.out.println(sr.toString());
     }
 
