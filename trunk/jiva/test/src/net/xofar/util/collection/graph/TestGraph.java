@@ -50,7 +50,8 @@ public class TestGraph
             }
 
         });
-        Graph<String> g = Graph.Builder.build("((A,B),(A,C),(A,D),(B,D))", false);
+        Graph<String> g = Graph.Builder.build("((A,B),(A,C),(A,D),(B,D))",
+                false);
         Bfs.SearchResults<String> sr = g.bfs(new Vertex<String>("A"), visitor);
         System.out.println(sr.toString());
     }
@@ -68,8 +69,19 @@ public class TestGraph
             }
 
         });
-        Graph<String> g = Graph.Builder.build("((A,B),(A,C),(A,D),(B,D))", false);
+        Graph<String> g = Graph.Builder.build("((A,B),(A,C),(A,D),(B,D))",
+                false);
         Dfs<String>.SearchResults sr = g.dfs(new Vertex<String>("A"), visitor);
+        System.out.println(sr.toString());
+    }
+
+    @Test
+    public void testDjikstra()
+    {
+        Graph<String> g = Graph.Builder.build2(
+                "((s,y,5),(s,t,10),(y,t,3),(y,x,9),(y,z,2),(t,y,2),(t,x,1)"
+                        + ",(z,s,7),(z,x,6),(x,z,4))", true);
+        Dijkstra.SearchResults<String> sr = g.djikstra(new Vertex<String>("s"));
         System.out.println(sr.toString());
     }
 
