@@ -26,10 +26,11 @@ import java.util.Scanner;
 import java.util.Set;
 
 import net.xofar.util.collection.Pair;
+import net.xofar.util.collection.Tuple3;
 
 public class Graph<T>
 {
-    Map<Vertex<T>, List<Vertex<T>>> adjList = new HashMap<Vertex<T>, List<Vertex<T>>>();
+    Map<Vertex<T>, List<EdgeData<T>>> adjList = new HashMap<Vertex<T>, List<EdgeData<T>>>();
     Set<Vertex<T>> vertices = new LinkedHashSet<Vertex<T>>();
     private boolean directed;
 
@@ -47,12 +48,12 @@ public class Graph<T>
         return vertices;
     }
 
-    private void edge(Pair<Vertex<T>, Vertex<T>> edge)
+    private void edge(Tuple3<Vertex<T>, Vertex<T>, Double> edge)
     {
-        addEdgeToAdjList(edge.e1, edge.e2);
+        addEdgeToAdjList(edge.e1, edge.e2, edge.e3);
 
         if (!directed) {
-            addEdgeToAdjList(edge.e2, edge.e1);
+            addEdgeToAdjList(edge.e2, edge.e1, edge.e3);
         }
 
         if (!vertices.contains(edge.e1)) {
@@ -63,19 +64,19 @@ public class Graph<T>
         }
     }
 
-    private void addEdgeToAdjList(Vertex<T> v1, Vertex<T> v2)
+    private void addEdgeToAdjList(Vertex<T> v1, Vertex<T> v2, Double weight)
     {
-        List<Vertex<T>> currList = adjList.get(v1);
+        List<EdgeData<T>> currList = adjList.get(v1);
         if (currList == null) {
-            currList = new ArrayList<Vertex<T>>();
+            currList = new ArrayList<EdgeData<T>>();
             adjList.put(v1, currList);
         }
-        currList.add(v2);
+        currList.add(new EdgeData<T>(v2, weight));
     }
 
-    List<Vertex<T>> adjList(Vertex<T> vertex)
+    List<EdgeData<T>> adjList(Vertex<T> vertex)
     {
-        List<Vertex<T>> adjacents = adjList.get(vertex);
+        List<EdgeData<T>> adjacents = adjList.get(vertex);
         if (adjacents == null) {
             return Collections.EMPTY_LIST;
         }
@@ -89,16 +90,18 @@ public class Graph<T>
     {
         StringBuilder sb = new StringBuilder();
         sb.append("(");
-        for (Iterator<Map.Entry<Vertex<T>, List<Vertex<T>>>> iter = adjList
+        for (Iterator<Map.Entry<Vertex<T>, List<EdgeData<T>>>> iter = adjList
                 .entrySet().iterator(); iter.hasNext();) {
-            Map.Entry<Vertex<T>, List<Vertex<T>>> entry = iter.next();
+            Map.Entry<Vertex<T>, List<EdgeData<T>>> entry = iter.next();
             Vertex<T> vertex = entry.getKey();
-            List<Vertex<T>> adjacents = entry.getValue();
-            for (Vertex<T> vertex2 : adjacents) {
+            List<EdgeData<T>> adjacents = entry.getValue();
+            for (EdgeData<T> ed : adjacents) {
                 sb.append("(");
                 sb.append(vertex.data.toString());
                 sb.append(",");
-                sb.append(vertex2.data.toString());
+                sb.append(ed.v2.data.toString());
+                sb.append(",");
+                sb.append(ed.weight);
                 sb.append(")");
             }
         }
@@ -108,22 +111,22 @@ public class Graph<T>
 
     public static class Builder<T>
     {
-        List<Pair<Vertex<T>, Vertex<T>>> edges;
+        List<Tuple3<Vertex<T>, Vertex<T>, Double>> edges;
 
         public Builder()
         {
-            edges = new ArrayList<Pair<Vertex<T>, Vertex<T>>>();
+            edges = new ArrayList<Tuple3<Vertex<T>, Vertex<T>, Double>>();
         }
 
-        public void edge(Vertex<T> vertex1, Vertex<T> vertex2)
+        public void edge(Vertex<T> vertex1, Vertex<T> vertex2, Double weight)
         {
-            edges.add(Pair.create(vertex1, vertex2));
+            edges.add(Tuple3.create(vertex1, vertex2, weight));
         }
 
         public Graph<T> build(boolean directed)
         {
             Graph<T> graph = new Graph<T>(directed);
-            for (Pair<Vertex<T>, Vertex<T>> edge : edges) {
+            for (Tuple3<Vertex<T>, Vertex<T>, Double> edge : edges) {
                 graph.edge(edge);
             }
             return graph;
@@ -145,7 +148,7 @@ public class Graph<T>
                 }
                 Vertex<String> v1 = new Vertex<String>(vs1);
                 Vertex<String> v2 = new Vertex<String>(vs2);
-                builder.edge(v1, v2);
+                builder.edge(v1, v2, 1.0);
             }
             return builder.build(directed);
         }
@@ -161,6 +164,31 @@ public class Graph<T>
             }
             return token;
         }
+
+        public static Graph<String> build2(String graphRep, boolean directed)
+        {
+            Builder<String> builder = new Builder<String>();
+            Scanner scanner = new Scanner(graphRep);
+            scanner.useDelimiter("[(,)\\s]");
+            while (true) {
+                String vs1 = nextToken(scanner);
+                if (vs1 == null) {
+                    break;
+                }
+                String vs2 = nextToken(scanner);
+                if (vs2 == null) {
+                    throw new IllegalArgumentException("Bad graph literal");
+                }
+                String w = nextToken(scanner);
+                if (w == null) {
+                    throw new IllegalArgumentException("Bad graph literal");
+                }
+                Vertex<String> v1 = new Vertex<String>(vs1);
+                Vertex<String> v2 = new Vertex<String>(vs2);
+                builder.edge(v1, v2, Double.valueOf(w));
+            }
+            return builder.build(directed);
+        }
     }
 
     public Bfs.SearchResults<T> bfs(Vertex<T> vertex, GraphVisitor<T> visitor)
@@ -173,5 +201,11 @@ public class Graph<T>
     {
         Dfs<T> searcher = new Dfs<T>();
         return searcher.dfs(this, visitor);
+    }
+
+    public Dijkstra.SearchResults<T> djikstra(Vertex<T> vertex)
+    {
+        Dijkstra<T> searcher = new Dijkstra<T>();
+        return searcher.search(this, vertex);
     }
 }

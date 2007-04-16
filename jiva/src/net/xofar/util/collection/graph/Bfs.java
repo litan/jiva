@@ -18,7 +18,6 @@ package net.xofar.util.collection.graph;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import net.xofar.util.collection.SmartMap;
@@ -29,7 +28,7 @@ import net.xofar.util.collection.graph.Graph.VertexColor;
  * 
  * @author lalitp
  */
-public class Bfs<T>
+class Bfs<T>
 {
 
     public SearchResults<T> bfs(Graph<T> graph, Vertex<T> root,
@@ -46,8 +45,8 @@ public class Bfs<T>
             visitor.visit(vertex);
             ss.setBlack(vertex);
 
-            List<Vertex<T>> adjacents = graph.adjList(vertex);
-            for (Vertex<T> adjVertex : adjacents) {
+            for (EdgeData<T> ed : graph.adjList(vertex)) {
+                Vertex<T> adjVertex = ed.v2;
                 if (ss.isBlack(adjVertex)) {
                     continue;
                 }
@@ -61,12 +60,12 @@ public class Bfs<T>
         }
         return sr;
     }
-    
+
     class SearchState
     {
         Map<Vertex<T>, VertexColor> vState = new SmartMap<Vertex<T>, VertexColor>(
                 VertexColor.WHITE);
-        
+
         public boolean isBlack(Vertex<T> vertex)
         {
             return vState.get(vertex).equals(VertexColor.BLACK);
@@ -89,7 +88,7 @@ public class Bfs<T>
 
     }
 
-    static class SearchResults<T>
+    public static class SearchResults<T>
     {
         Map<Vertex<T>, Vertex<T>> parents = new HashMap<Vertex<T>, Vertex<T>>();
 
