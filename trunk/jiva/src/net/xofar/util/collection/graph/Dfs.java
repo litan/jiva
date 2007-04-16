@@ -48,7 +48,8 @@ class Dfs<T>
     void dfs(Graph<T> graph, Vertex<T> vertex, GraphVisitor<T> visitor)
     {
         ss.setGray(vertex);
-        for (Vertex<T> adjVertex : graph.adjList(vertex)) {
+        for (EdgeData<T> ed : graph.adjList(vertex)) {
+            Vertex<T> adjVertex = ed.v2;
             if (ss.isWhite(adjVertex)) {
                 sr.setParent(adjVertex, vertex);
                 dfs(graph, adjVertex, visitor);
@@ -96,7 +97,7 @@ class Dfs<T>
 
     }
 
-    class SearchResults
+    public class SearchResults
     {
         Map<Vertex<T>, Vertex<T>> parents = new HashMap<Vertex<T>, Vertex<T>>();
         Map<Vertex<T>, Vertex<T>> backEdges = new HashMap<Vertex<T>, Vertex<T>>();
