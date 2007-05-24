@@ -16,7 +16,7 @@
 package net.xofar.jiva.selection;
 
 import static net.xofar.util.TestUtils.*;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,13 +26,12 @@ import net.xofar.jiva.RandomGenerator;
 import net.xofar.jiva.TestData;
 import net.xofar.jiva.population.Chromosome;
 import net.xofar.jiva.population.Population;
-import net.xofar.jiva.selection.TournamentSelector;
 import net.xofar.util.TestUtils;
+import net.xofar.util.XofarTestBase;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
-import org.jmock.lib.nonstd.UnsafeHackConcreteClassImposteriser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,13 +44,9 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JMock.class)
 public class TestTournamentSelector
+        extends XofarTestBase
 {
-    Mockery context = new Mockery()
-    {
-        {
-            setImposteriser(new UnsafeHackConcreteClassImposteriser());
-        }
-    };
+    public Mockery context = super.context;
 
     Population<Boolean> pop;
     TournamentSelector<Boolean> selector;
