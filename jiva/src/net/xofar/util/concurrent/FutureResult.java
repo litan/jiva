@@ -22,19 +22,30 @@ import java.util.concurrent.FutureTask;
 public class FutureResult<V> {
     volatile V result;
 
+    Exception problem;
+
     FutureTask<V> resultSyncer;
 
     public FutureResult() {
 	Callable<V> resultReturner = new Callable<V>() {
 	    public V call() throws Exception {
-		return result;
+		if (problem != null) {
+		    throw problem;
+		} else {
+		    return result;
+		}
 	    }
 	};
 	resultSyncer = new FutureTask<V>(resultReturner);
     }
 
-    public void setResult(V result) {
+    public void set(V result) {
 	this.result = result;
+	resultSyncer.run();
+    }
+
+    public void setException(Exception problem) {
+	this.problem = problem;
 	resultSyncer.run();
     }
 
