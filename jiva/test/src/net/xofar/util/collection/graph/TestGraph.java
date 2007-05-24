@@ -15,7 +15,7 @@
 
 package net.xofar.util.collection.graph;
 
-import static net.xofar.jiva.TestUtils.*;
+import static net.xofar.util.TestUtils.*;
 
 import java.util.ArrayList;
 import java.util.List;

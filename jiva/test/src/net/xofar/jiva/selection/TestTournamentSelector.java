@@ -15,7 +15,7 @@
 
 package net.xofar.jiva.selection;
 
-import static net.xofar.jiva.TestUtils.returnConsecutiveValues;
+import static net.xofar.util.TestUtils.*;
 import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
@@ -24,10 +24,10 @@ import java.util.List;
 
 import net.xofar.jiva.RandomGenerator;
 import net.xofar.jiva.TestData;
-import net.xofar.jiva.TestUtils;
 import net.xofar.jiva.population.Chromosome;
 import net.xofar.jiva.population.Population;
 import net.xofar.jiva.selection.TournamentSelector;
+import net.xofar.util.TestUtils;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;

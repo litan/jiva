@@ -13,7 +13,7 @@
  *
  */
 
-package net.xofar.jiva;
+package net.xofar.util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
