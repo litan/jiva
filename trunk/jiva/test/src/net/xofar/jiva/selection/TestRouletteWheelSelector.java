@@ -12,9 +12,10 @@
  * rights and limitations under the License.
  *
  */
+
 package net.xofar.jiva.selection;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,13 +25,12 @@ import net.xofar.jiva.RandomGenerator;
 import net.xofar.jiva.TestData;
 import net.xofar.jiva.population.Chromosome;
 import net.xofar.jiva.population.Population;
-import net.xofar.jiva.selection.RouletteWheelSelector;
 import net.xofar.util.TestUtils;
+import net.xofar.util.XofarTestBase;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
-import org.jmock.lib.nonstd.UnsafeHackConcreteClassImposteriser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,13 +41,9 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JMock.class)
 public class TestRouletteWheelSelector
+        extends XofarTestBase
 {
-    Mockery context = new Mockery()
-    {
-        {
-            setImposteriser(new UnsafeHackConcreteClassImposteriser());
-        }
-    };
+    public Mockery context = super.context;
 
     Population<Boolean> pop;
     RouletteWheelSelector<Boolean> selector;
@@ -66,7 +62,7 @@ public class TestRouletteWheelSelector
         final List<Double> fitnesses = getTestChromosomeFitnessesMidRange();
         final List<Double> probs = getRgProbsMidRange();
         List<Chromosome<Boolean>> chrs = TestData.getTestChromosomes();
-        List<Chromosome<Boolean>> expected = getExpectedSelectedChromosomesMidRange(chrs);        
+        List<Chromosome<Boolean>> expected = getExpectedSelectedChromosomesMidRange(chrs);
         testHelper(fitnesses, probs, chrs, expected);
     }
 
@@ -77,7 +73,7 @@ public class TestRouletteWheelSelector
         final List<Double> fitnesses = getTestChromosomeFitnessesLeftEdge();
         final List<Double> probs = getRgProbsLeftEdge();
         List<Chromosome<Boolean>> chrs = TestData.getTestChromosomes();
-        List<Chromosome<Boolean>> expected = getExpectedSelectedChromosomesLeftEdge(chrs);        
+        List<Chromosome<Boolean>> expected = getExpectedSelectedChromosomesLeftEdge(chrs);
         testHelper(fitnesses, probs, chrs, expected);
     }
 
@@ -88,7 +84,7 @@ public class TestRouletteWheelSelector
         final List<Double> fitnesses = getTestChromosomeFitnessesRightEdge();
         final List<Double> probs = getRgProbsRightEdge();
         List<Chromosome<Boolean>> chrs = TestData.getTestChromosomes();
-        List<Chromosome<Boolean>> expected = getExpectedSelectedChromosomesRightEdge(chrs);        
+        List<Chromosome<Boolean>> expected = getExpectedSelectedChromosomesRightEdge(chrs);
         testHelper(fitnesses, probs, chrs, expected);
     }
 
@@ -118,8 +114,7 @@ public class TestRouletteWheelSelector
                 .size(), rg);
 
         Population<Boolean> resultPop = selector.select(pop);
-        assertTrue(TestUtils.listEquals(expected,
-                resultPop.getChromosomes()));
+        assertTrue(TestUtils.listEquals(expected, resultPop.getChromosomes()));
     }
 
     List<Double> getRgProbsMidRange()
@@ -144,7 +139,6 @@ public class TestRouletteWheelSelector
         return chrs2;
     }
 
-
     List<Double> getRgProbsLeftEdge()
     {
         return Arrays.asList(0.01, 0.03, 0.02, 0.04);
@@ -166,7 +160,7 @@ public class TestRouletteWheelSelector
         chrs2.add(chrs.get(0));
         return chrs2;
     }
-    
+
     List<Double> getRgProbsRightEdge()
     {
         return Arrays.asList(0.8, 0.9, 0.85, 0.95);

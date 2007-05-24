@@ -15,23 +15,20 @@
 
 package net.xofar.util.listener;
 
+import net.xofar.util.XofarTestBase;
+
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
-import org.jmock.lib.nonstd.UnsafeHackConcreteClassImposteriser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(JMock.class)
 public class TestBroadcaster
+        extends XofarTestBase
 {
-    Mockery context = new Mockery()
-    {
-        {
-            setImposteriser(new UnsafeHackConcreteClassImposteriser());
-        }
-    };
+    public Mockery context = super.context;
 
     EventBroadcaster<String> broadcaster;
 

@@ -20,17 +20,16 @@
 package net.xofar.jiva.operators;
 
 import static net.xofar.util.TestUtils.*;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 import net.xofar.jiva.RandomGenerator;
 import net.xofar.jiva.TestData;
-import net.xofar.jiva.operators.MutationOp;
 import net.xofar.jiva.population.Population;
 import net.xofar.util.TestUtils;
+import net.xofar.util.XofarTestBase;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
-import org.jmock.lib.nonstd.UnsafeHackConcreteClassImposteriser;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,13 +41,9 @@ import org.junit.runner.RunWith;
  */
 @RunWith(JMock.class)
 public class TestMutationOp
+        extends XofarTestBase
 {
-    Mockery context = new Mockery()
-    {
-        {
-            setImposteriser(new UnsafeHackConcreteClassImposteriser());
-        }
-    };
+    public Mockery context = super.context;
 
     Population<Boolean> pop;
     MutationOp mutation;
@@ -80,8 +75,8 @@ public class TestMutationOp
 
         mutation.setRandomGenerator(rg);
         mutation.operate(pop);
-        assertTrue(TestUtils.listEquals(TestData.getExpectedMutatedChromosomes(),
-                pop.getChromosomes()));
+        assertTrue(TestUtils.listEquals(TestData
+                .getExpectedMutatedChromosomes(), pop.getChromosomes()));
 
     }
 }
