@@ -27,29 +27,29 @@ public class FutureResult<V> {
     FutureTask<V> resultSyncer;
 
     public FutureResult() {
-	Callable<V> resultReturner = new Callable<V>() {
-	    public V call() throws Exception {
-		if (problem != null) {
-		    throw problem;
-		} else {
-		    return result;
-		}
-	    }
-	};
-	resultSyncer = new FutureTask<V>(resultReturner);
+        Callable<V> resultReturner = new Callable<V>() {
+            public V call() throws Exception {
+                if (problem != null) {
+                    throw problem;
+                } else {
+                    return result;
+                }
+            }
+        };
+        resultSyncer = new FutureTask<V>(resultReturner);
     }
 
     public void set(V result) {
-	this.result = result;
-	resultSyncer.run();
+        this.result = result;
+        resultSyncer.run();
     }
 
     public void setException(Exception problem) {
-	this.problem = problem;
-	resultSyncer.run();
+        this.problem = problem;
+        resultSyncer.run();
     }
 
     public V get() throws InterruptedException, ExecutionException {
-	return resultSyncer.get();
+        return resultSyncer.get();
     }
 }

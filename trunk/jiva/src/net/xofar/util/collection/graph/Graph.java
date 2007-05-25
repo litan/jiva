@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 
-import net.xofar.util.collection.Pair;
 import net.xofar.util.collection.Tuple3;
 
 public class Graph<T>
