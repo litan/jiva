@@ -20,11 +20,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 
 public class FutureResult<V> {
-    volatile V result;
+    private volatile V result;
 
-    volatile Exception problem;
+    private volatile Exception problem;
 
-    final FutureTask<V> resultSyncer;
+    private final FutureTask<V> resultSyncer;
 
     public FutureResult() {
         Callable<V> resultReturner = new Callable<V>() {
